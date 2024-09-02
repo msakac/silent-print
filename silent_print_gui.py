@@ -124,37 +124,32 @@ label = ctk.CTkLabel(
     window,
     text="1. Odaberite preglednik: ",
     font=("Arial", 12, "bold"),
-)
-label.pack(pady=(20, 0))
+).pack(pady=(20, 0))
 
 browser_var = ctk.StringVar(window)
 initial_browser = next(iter(found_browsers.keys()), "Odaberite preglednik")
 browser_var.set(initial_browser)
 browser_dropdown = ctk.CTkOptionMenu(
-    window, variable=browser_var, values=list(found_browsers.keys()))
-browser_dropdown.pack()
+    window, variable=browser_var, values=list(found_browsers.keys())).pack()
 
 # Create and place the label and entry_shortcut_name for the shortcut name
 label = ctk.CTkLabel(
     window,
     text="2. Unesite ime prečaca: ",
     font=("Arial", 12, "bold"),
-)
-label.pack(pady=(20, 0))
+).pack(pady=(20, 0))
 entry_shortcut_name = ctk.CTkEntry(
-    window, width=300, textvariable=ctk.StringVar(value="Kasa"))
-entry_shortcut_name.pack()
+    window, width=300, textvariable=ctk.StringVar(value="Kasa")).pack()
 
 # Create and place the label and entry_shortcut_name for the shortcut name
 label = ctk.CTkLabel(
     window,
     text="3. Unesite link početne stranice: ",
     font=("Arial", 12, "bold"),
-)
-label.pack(pady=(20, 0))
+).pack(pady=(20, 0))
+
 entry_url = ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(
-    value="https://www.google.com/"))
-entry_url.pack()
+    value="https://www.google.com/")).pack()
 
 # Create and place the button to create the shortcut
 button = ctk.CTkButton(
@@ -162,8 +157,7 @@ button = ctk.CTkButton(
     text="Kreiraj prečac",
     command=on_create_shortcut,
     font=("Arial", 14, "bold")
-)
-button.pack(pady=20)
+).pack(pady=20)
 
 # Run the GUI event loop
 window.mainloop()
