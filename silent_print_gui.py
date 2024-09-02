@@ -1,7 +1,7 @@
 import os
 import winreg
-import customtkinter as ctk
 from tkinter import messagebox
+import customtkinter as ctk
 import tkinter
 import winshell
 from win32com.client import Dispatch
@@ -120,7 +120,7 @@ if not found_browsers:
     label.pack()
 
 # Create and place the dropdown for selecting the browser
-label = ctk.CTkLabel(
+ctk.CTkLabel(
     window,
     text="1. Odaberite preglednik: ",
     font=("Arial", 12, "bold"),
@@ -129,30 +129,30 @@ label = ctk.CTkLabel(
 browser_var = ctk.StringVar(window)
 initial_browser = next(iter(found_browsers.keys()), "Odaberite preglednik")
 browser_var.set(initial_browser)
-browser_dropdown = ctk.CTkOptionMenu(
+ctk.CTkOptionMenu(
     window, variable=browser_var, values=list(found_browsers.keys())).pack()
 
 # Create and place the label and entry_shortcut_name for the shortcut name
-label = ctk.CTkLabel(
+ctk.CTkLabel(
     window,
     text="2. Unesite ime prečaca: ",
     font=("Arial", 12, "bold"),
 ).pack(pady=(20, 0))
-entry_shortcut_name = ctk.CTkEntry(
+ctk.CTkEntry(
     window, width=300, textvariable=ctk.StringVar(value="Kasa")).pack()
 
 # Create and place the label and entry_shortcut_name for the shortcut name
-label = ctk.CTkLabel(
+ctk.CTkLabel(
     window,
     text="3. Unesite link početne stranice: ",
     font=("Arial", 12, "bold"),
 ).pack(pady=(20, 0))
 
-entry_url = ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(
+ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(
     value="https://www.google.com/")).pack()
 
 # Create and place the button to create the shortcut
-button = ctk.CTkButton(
+ctk.CTkButton(
     window,
     text="Kreiraj prečac",
     command=on_create_shortcut,
