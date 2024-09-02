@@ -6,6 +6,7 @@ import tkinter
 import winshell
 from win32com.client import Dispatch
 
+
 def find_browser_paths():
     browsers = {
         "Google Chrome": [
@@ -43,46 +44,51 @@ def find_browser_paths():
 
     return found_browsers
 
-def create_shortcut(browser_path: str, shortcut_name: str):
+
+def create_shortcut(browser_path: str, shortcut_name: str, url: str):
     desktop = winshell.desktop()
-    path = os.path.join(desktop, f"{shortcut_name}.lnk")
+    shortcut_path = os.path.join(desktop, f"{shortcut_name}.lnk")
     shell = Dispatch('WScript.Shell')
-    shortcut = shell.CreateShortCut(path)
+    shortcut = shell.CreateShortCut(shortcut_path)
     shortcut.Targetpath = browser_path
-    shortcut.Arguments = "--kiosk-printing"
+    shortcut.Arguments = f"--kiosk-printing {url}"
     shortcut.WorkingDirectory = os.path.dirname(browser_path)
     shortcut.IconLocation = browser_path
     shortcut.save()
+
 
 def on_create_shortcut():
     selected_browser = browser_var.get()
     if selected_browser in found_browsers:
         browser_path = found_browsers[selected_browser]
-        shortcut_name = entry.get()
-        if shortcut_name:
-            create_shortcut(browser_path, shortcut_name)
+        shortcut_name = entry_shortcut_name.get()
+        url = entry_url.get()
+        if shortcut_name and url:
+            create_shortcut(browser_path, shortcut_name, url)
             messagebox.showinfo(
-                "Uspjeh", f"Prečac '{shortcut_name}' za preglednik {selected_browser} je uspješno kreiran.")
+                "Uspjeh", f"Prečac '{shortcut_name}' je uspješno kreiran.")
         else:
             messagebox.showwarning(
-                "Greška u unosu", "Molimo unesite ime za prečac.")
+                "Greška u unosu", "Molimo unesite ime za prečac i link.")
     else:
-        messagebox.showerror("Greška", "Odabrani preglednik nije instaliran na Vašem računalu.")
+        messagebox.showerror(
+            "Greška", "Odabrani preglednik nije instaliran na Vašem računalu.")
+
 
 # Create the main window
 window = ctk.CTk()
 window.title("Kreiranje prečaca preglednika za ispis")
 window.resizable(False, False)
-window_height = 400
-window_width = 600
+WINDOW_HEIGHT = 450
+WINDOW_WIDTH = 600
 
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
-x_cordinate = int((screen_width/2) - (window_width/2))
-y_cordinate = int((screen_height/2) - (window_height/2))
+x_cordinate = int((screen_width/2) - (WINDOW_WIDTH/2))
+y_cordinate = int((screen_height/2) - (WINDOW_HEIGHT/2))
 
-window.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+window.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x_cordinate}+{y_cordinate}")
 
 # Find browser paths
 found_browsers = find_browser_paths()
@@ -90,14 +96,20 @@ found_browsers = find_browser_paths()
 # Display found browsers and their paths
 browser_list_label = ctk.CTkLabel(
     window,
-    text="Pronađeni preglednici i njihove putanje:",
-    font=("Arial", 14, "bold"),
+    text="Instalirani preglednici na računalu: ",
+    font=("Arial", 13, "bold"),
 )
 
-browser_list_label.pack(pady=10)
+browser_list_label.pack()
 for browser, path in found_browsers.items():
-    browser_label = ctk.CTkLabel(window, text=f"{browser}: {path}")
-    browser_label.pack()
+    ctk.CTkLabel(window, text=f"{browser}", font=(
+        "Arial", 13, "bold"), text_color="green").pack(pady=0)
+    ctk.CTkLabel(
+        window,
+        text=f"Putanja: {path}",
+        font=("Arial", 11, "italic"),
+        text_color="gray"
+    ).pack()
 if not found_browsers:
     label = ctk.CTkLabel(
         window,
@@ -113,26 +125,44 @@ label = ctk.CTkLabel(
     text="1. Odaberite preglednik: ",
     font=("Arial", 12, "bold"),
 )
-label.pack(pady=(30, 0))
+label.pack(pady=(20, 0))
 
 browser_var = ctk.StringVar(window)
 initial_browser = next(iter(found_browsers.keys()), "Odaberite preglednik")
 browser_var.set(initial_browser)
-browser_dropdown = ctk.CTkOptionMenu(window, variable=browser_var, values=list(found_browsers.keys()))
+browser_dropdown = ctk.CTkOptionMenu(
+    window, variable=browser_var, values=list(found_browsers.keys()))
 browser_dropdown.pack()
 
-# Create and place the label and entry for the shortcut name
+# Create and place the label and entry_shortcut_name for the shortcut name
 label = ctk.CTkLabel(
     window,
     text="2. Unesite ime prečaca: ",
     font=("Arial", 12, "bold"),
 )
-label.pack(pady=(30, 0))
-entry = ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(value="Kasa"))
-entry.pack()
+label.pack(pady=(20, 0))
+entry_shortcut_name = ctk.CTkEntry(
+    window, width=300, textvariable=ctk.StringVar(value="Kasa"))
+entry_shortcut_name.pack()
+
+# Create and place the label and entry_shortcut_name for the shortcut name
+label = ctk.CTkLabel(
+    window,
+    text="3. Unesite link početne stranice: ",
+    font=("Arial", 12, "bold"),
+)
+label.pack(pady=(20, 0))
+entry_url = ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(
+    value="https://www.google.com/"))
+entry_url.pack()
 
 # Create and place the button to create the shortcut
-button = ctk.CTkButton(window, text="Kreiraj prečac", command=on_create_shortcut)
+button = ctk.CTkButton(
+    window,
+    text="Kreiraj prečac",
+    command=on_create_shortcut,
+    font=("Arial", 14, "bold")
+)
 button.pack(pady=20)
 
 # Run the GUI event loop
