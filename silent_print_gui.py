@@ -138,7 +138,7 @@ ctk.CTkLabel(
     text="2. Unesite ime prečaca: ",
     font=("Arial", 12, "bold"),
 ).pack(pady=(20, 0))
-ctk.CTkEntry(
+entry_shortcut_name = ctk.CTkEntry(
     window, width=300, textvariable=ctk.StringVar(value="Kasa")).pack()
 
 # Create and place the label and entry_shortcut_name for the shortcut name
@@ -148,7 +148,7 @@ ctk.CTkLabel(
     font=("Arial", 12, "bold"),
 ).pack(pady=(20, 0))
 
-ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(
+entry_url = ctk.CTkEntry(window, width=300, textvariable=ctk.StringVar(
     value="https://www.google.com/")).pack()
 
 # Create and place the button to create the shortcut
